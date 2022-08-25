@@ -1,0 +1,118 @@
+CREATE TABLE coffee_shop (
+  shop_id INT PRIMARY KEY,
+  shop_name VARCHAR(50),
+  city VARCHAR(50),
+  state CHAR(2)
+);
+
+CREATE TABLE employee (
+  employee_id INT PRIMARY KEY,
+  first_name VARCHAR(30),
+  last_name VARCHAR(30),
+  hire_date DATE,
+  job_title VARCHAR(30),
+  shop_id INT,
+  FOREIGN KEY (shop_id) REFERENCES coffee_shop(shop_id) ON DELETE SET NULL
+);
+
+CREATE TABLE supplier (
+  supplier_id INT PRIMARY KEY,
+  company_name VARCHAR(50),
+  country VARCHAR(30),
+  sales_contact_name VARCHAR(60),
+  email VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE coffee (
+  coffee_id INT PRIMARY KEY,
+  shop_id INT,
+  supplier_id INT,
+  coffee_name VARCHAR(30),
+  price_per_pound NUMERIC(5,2),
+  FOREIGN KEY (shop_id) REFERENCES coffee_shop(shop_id) ON DELETE SET NULL,
+  FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id) ON DELETE SET NULL
+);
+
+
+
+
+
+INSERT INTO coffee_shop 
+VALUES
+  (100, 'Drip Denver', 'Denver', 'CO'),
+  (101, 'Starbucks', 'Seattle', 'WA'),
+  (102, 'Cafe Dumonde', 'New Orleans', 'LA'),
+  (103, 'The Bardo Coffee House', 'Denver', 'CO')
+;
+
+INSERT INTO employee 
+VALUES
+  (1642, 'Jim', 'Jones', '2022-01-01', 'Frother', 100),
+  (7266, 'Mike', 'Wazowski', '2006-10-31', 'Coffee Monster', 102),
+  (7526, 'Frank', 'Furter', '1965-03-15', 'Caffiene Wizard', 101),
+  (2432, 'Wendy', 'McDonald', '2014-11-27', 'Roaster', 103),
+  (5134, 'Betty', 'White', '2021-12-31', 'Friendly Poltergeist', 100),
+  (3218, 'Karen', 'Miser', '1980-06-06', 'Customer Service', 102),
+  (7812, 'Jimothy', 'Simpson', '1999-04-01', 'Dishwasher', 101),
+  (8102, 'Sam', 'Michaels', '2020-03-17', 'Name Yeller', 103)
+;
+
+INSERT INTO supplier
+VALUES
+  (321, 'Good Beans', 'Ethiopia', 'Chim Richels', 'goodbeans@coffee.com'),
+  (456, 'Get Perky', 'Colombia', 'Carlos Affogato', 'prekyandfresh@coffee.com'),
+  (741, 'Roast Masters', 'Brazil', 'Eddy Gilberto', 'theroastwiththemost@coffee.com')
+;
+
+INSERT INTO coffee
+VALUES
+  (10, 100, 321, 'Blonde Roast', 10.25),
+  (11, 101, 321, 'Brunette Roast', 15.26),
+  (12, 102, 456, 'Ground', 19.98),
+  (13, 103, 456, 'Earth', 9.99),
+  (14, 100, 741, 'Bold', 13.75),
+  (15, 101, 741, 'Underlined', 32.65),
+  (16, 102, 321, 'Ginger Roast', 17.27),
+  (17, 103, 741, 'Italicised', 24.35)
+;
+
+
+
+
+
+CREATE VIEW employee_view AS
+SELECT CONCAT(first_name, ' ', last_name) AS employee_full_name, employee_id, hire_date, job_title, shop_id
+FROM employee
+;
+
+
+
+
+
+
+
+CREATE INDEX coffee_index
+ON coffee (coffee_name)
+;
+
+
+
+
+SELECT employee_full_name, hire_date
+FROM employee_view
+WHERE hire_date <= '2019'
+;
+
+
+
+SELECT supplier.company_name AS 'Coffee Company', coffee.coffee_name AS 'Roasts Offered', CONCAT(coffee_shop.shop_name, ', ', coffee_shop.state) AS 'Coffee Shop'
+FROM supplier
+JOIN coffee
+ON supplier.supplier_id = coffee.supplier_id
+JOIN coffee_shop
+ON coffee.shop_id = coffee_shop.shop_id
+ORDER BY supplier.company_name
+;
+
+
+
