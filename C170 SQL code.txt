@@ -1,3 +1,5 @@
+-- STEP 1 CREATE THE TABLES
+
 CREATE TABLE coffee_shop (
   shop_id INT PRIMARY KEY,
   shop_name VARCHAR(50),
@@ -34,8 +36,7 @@ CREATE TABLE coffee (
 );
 
 
-
-
+-- STEP 2 FILL THE TABLES
 
 INSERT INTO coffee_shop 
 VALUES
@@ -77,8 +78,7 @@ VALUES
 ;
 
 
-
-
+-- STEP 3  CREATE VIEW
 
 CREATE VIEW employee_view AS
 SELECT CONCAT(first_name, ' ', last_name) AS employee_full_name, employee_id, hire_date, job_title, shop_id
@@ -86,17 +86,14 @@ FROM employee
 ;
 
 
-
-
-
-
+-- STEP 4 CREATE INDEX
 
 CREATE INDEX coffee_index
 ON coffee (coffee_name)
 ;
 
 
-
+-- STEP 5 SELECT SOME DATA
 
 SELECT employee_full_name, hire_date
 FROM employee_view
@@ -104,6 +101,7 @@ WHERE hire_date <= '2019'
 ;
 
 
+-- STEP 6 JOIN THE TABLES
 
 SELECT supplier.company_name AS 'Coffee Company', coffee.coffee_name AS 'Roasts Offered', CONCAT(coffee_shop.shop_name, ', ', coffee_shop.state) AS 'Coffee Shop'
 FROM supplier
